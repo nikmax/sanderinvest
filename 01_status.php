@@ -1,6 +1,6 @@
 <?php
   include 'conf.php';
-  $version = "2.01";
+  $version = "2.02";
   error_reporting(E_ALL);
   // vars
     $t1 = "acc_history";
@@ -109,8 +109,14 @@
     global $t1,$t3;
     array_shift($data);//"ticket,close_time,close_price,profit,swap"
     $len = count($data);
-    if($len != 1) exit("server: deal not recived");
-    // else closed position found , calculate roi
+    if($len != 1){
+      //exit("server: deal not recived");
+      // // else closed position found , calculate roi
+      $sql = "select abs(sum( if(code_id = 9, amount,0))) sum from $t3 where other=$acc";
+      $res = sql_query($sql);
+      list($equity) = $res->fetch_array();
+      exit("GET,EQUITY,".number_format($equity,2));
+    }
     $roi = 0;
     list($ticket,$close_time,$close_price,$profit,$swap) = explode(";", array_shift($data));
     $sql = "select id,open_time,equity from $t1 where brokeraccount=$acc and ticket=$ticket";
