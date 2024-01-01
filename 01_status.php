@@ -34,7 +34,7 @@
     if ($password == '') exit("account error ");// oder neues anlegen
     $sql = "select id from $t6 where Number='$number' and OnlinePassword='$password'";
     if($res = $con->query($sql)){
-      if ($res->num_rows == 0) exit("account error ");// oder neues anlegen
+      if ($res->num_rows == 0) exit("account error 256");// oder neues anlegen
       list($acc) = $res->fetch_array();
       return array($acc,$response);
       }
