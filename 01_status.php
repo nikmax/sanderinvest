@@ -31,7 +31,7 @@
   function credentials($data){
     global $t6,$con;
     list($number,$password,$response) = explode(";", $data);
-    if ($password == '') exit("account error ");// oder neues anlegen
+    if ($password == '') exit("account error 400");// oder neues anlegen
     $sql = "select id from $t6 where Number='$number' and OnlinePassword='$password'";
     if($res = $con->query($sql)){
       if ($res->num_rows == 0) exit("account error 256");// oder neues anlegen
