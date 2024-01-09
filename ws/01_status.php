@@ -34,13 +34,13 @@
   function sql_query($sql){
     global $con;
     if($res = $con->query($sql)) {
-      //$log = date("F d, Y, g:i a") . " - db sql_query : $sql\n";
-      //file_put_contents('./log_'.date("d.n.Y").'.log', $log, FILE_APPEND);
+      $log = date("F d, Y, g:i a") . " - db sql_query : $sql\n";
+      file_put_contents('./log_'.date("d.n.Y").'.log', $log, FILE_APPEND);
       return $res;
       }
-    $log = date("F d, Y, g:i a") . " - db error : ${con->error} # $sql\n";
+    $log = date("F d, Y, g:i a") . " - db error : " . $con->error ." # $sql\n";
     file_put_contents('./log_'.date("d.n.Y").'.log', $log, FILE_APPEND);
-    exit("db error : ${con->error}");
+    exit("db error : " . $con->error);
     }
   function update($data,$acc){
     global $t1;
