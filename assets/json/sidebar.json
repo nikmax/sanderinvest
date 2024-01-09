@@ -1,0 +1,213 @@
+{
+	"items":[
+	  {
+	  	"name":"Dashboard",
+	  	"type":"nav-item",
+	  	"class":"bi bi-grid",
+		"path":"?pages/",
+		"file":"home"
+	  },
+	  {
+	  	"name":"Forms",
+	  	"type":"nav-item",
+	  	"class":"bi bi-journal-text",
+		"path":"oldfiles/forms-",
+		"items":[
+			{
+				"name":"Form Elements",
+				"file":"elements.html"
+			},
+			{
+				"name":"Form Layouts",
+				"file":"layouts.html"
+			},
+			{
+				"name":"Form Editors",
+				"file":"editors.html"
+			},
+			{
+				"name":"Form Validation",
+				"file":"validation.html"
+			}
+		]
+	  }
+	],
+	"deactivated":[
+	  {
+		"name":"Components",
+	  	"type":"nav-item",
+	  	"class":"bi bi-menu-button-wide",
+		"path":"?components/",
+		"items":[
+			{
+				"name":"Alerts",
+				"file":"alerts"
+			},
+			{
+				"name":"Accordion",
+				"file":"accordion"
+			},
+			{
+				"name":"Badges",
+				"file":"badges"
+			},
+			{
+				"name":"Breadcrumbs",
+				"file":"breadcrumbs"
+			},
+			{
+				"name":"Buttons",
+				"file":"buttons"
+			},
+			{
+				"name":"Cards",
+				"file":"cards"
+			},
+			{
+				"name":"Carousel",
+				"file":"carousel"
+			},
+			{
+				"name":"List group",
+				"file":"list-group"
+			},
+			{
+				"name":"Modal",
+				"file":"modal"
+			},
+			{
+				"name":"Tabs",
+				"file":"tabs"
+			},
+			{
+				"name":"Pagination",
+				"file":"pagination"
+			},
+			{
+				"name":"Progress",
+				"file":"progress"
+			},
+			{
+				"name":"Spinners",
+				"file":"spinners"
+			},
+			{
+				"name":"Tooltips",
+				"file":"tooltips"
+			}
+		]
+	  },
+	  {
+	  	"name":"Tables",
+	  	"type":"nav-item",
+	  	"class":"bi bi-layout-text-window-reverse",
+		"path":"oldfiles/tables-",
+		"items":[
+			{
+				"name":"General Tables",
+				"file":"general.html"
+			},
+			{
+				"name":"Data Tables",
+				"file":"data.html"
+			}
+		]
+	  },
+	  {
+	  	"name":"Charts",
+	  	"type":"nav-item",
+	  	"class":"bi bi-bar-chart",
+		"path":"oldfiles/charts-",
+		"items":[
+			{
+				"name":"Chart.js",
+				"file":"chartjs.html"
+			},
+			{
+				"name":"ApexCharts",
+				"file":"apexcharts.html"
+			},
+			{
+				"name":"ECharts",
+				"file":"echarts.html"
+			}
+		]
+	  },
+	  {
+	  	"name":"Icons",
+	  	"type":"nav-item",
+	  	"class":"bi bi-gem",
+		"path":"?icons/",
+		"items":[
+			{
+				"name":"Bootstrap Icons",
+				"file":"bootstrap"
+			},
+			{
+				"name":"Remix Icons",
+				"file":"remix"
+			},
+			{
+				"name":"Boxicons",
+				"file":"boxicons"
+			}
+		]
+	  },
+	  {
+	  	"name":"Pages",
+	  	"type":"nav-heading",
+	  	"class":""
+	  },
+	  {
+	  	"name":"Profile",
+	  	"type":"nav-item",
+	  	"class":"bi bi-person",
+		"path":"?users/",
+		"file":"profile"
+	  },
+	  {
+	  	"name":"F.A.Q",
+	  	"type":"nav-item",
+	  	"class":"bi bi-question-circle",
+		"path":"oldfiles/pages-",
+		"file":"faq.html"
+	  },
+	  {
+	  	"name":"Contact",
+	  	"type":"nav-item",
+	  	"class":"bi bi-envelope",
+		"path":"?forms/",
+		"file":"contact"
+	  }
+	],
+	"done":[
+		{
+	  	"name":"Register",
+	  	"type":"nav-item",
+	  	"class":"bi bi-card-list",
+		"path":"oldfiles/pages-",
+		"file":"register.html"
+	  },
+	  {
+	  	"name":"Login",
+	  	"type":"nav-item",
+	  	"class":"bi bi-box-arrow-in-right",
+		"path":"?login",
+		"file":""
+	  },
+	  {
+	  	"name":"Error 404",
+	  	"type":"nav-item",
+	  	"class":"bi bi-dash-circle",
+		"path":"?pages/",
+		"file":"error-404"
+	  },
+	  {
+	  	"name":"Blank",
+	  	"type":"nav-item",
+	  	"class":"bi bi-file-earmark",
+		"path":"?pages/",
+		"file":"blank"
+	  }
+	]
+}

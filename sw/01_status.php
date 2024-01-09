@@ -1,18 +1,9 @@
 <?php
-  include 'conf.php';
+  require_once '../assets/sql/config.php';
   $version = "2.02";
   error_reporting(E_ALL);
   // vars
-    $t1 = "acc_history";
-    $t2 = "company_data";
-    $t3 = "acc_user";
-    $t4 = "auth_user";
-    $t5 = "adm_entrycode";
-    $t6 = "adm_brokeraccount";
-    $ds = $HOST;
-    $du = $USER2;
-    $dp = $PSW2;
-    $db = $DB2;
+
     $con = new mysqli($ds,$du,$dp,$db);
     if ($con -> connect_error) {
       $log = date("F j, Y, g:i a") . ' - db connect error : ' . $con -> connect_error ."\n";
