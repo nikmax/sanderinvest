@@ -1,35 +1,38 @@
 <?php
   require_once '../assets/sql/config.php';
   $version = "2.02";
+  $startdate;
   error_reporting(E_ALL);
   // vars
 
     $con = new mysqli($ds,$du,$dp,$db);
     if ($con -> connect_error) {
-      $log = date("F j, Y, g:i a") . ' - db connect error : ' . $con -> connect_error ."\n";
-      file_put_contents('./log_'.date("j.n.Y").'.log', $log, FILE_APPEND);
-      exit("db connect error");
+      //$log = date("F j, Y, g:i a") . ' - db connect error : ' . $con -> connect_error ."\n";
+      //file_put_contents('./log_'.date("j.n.Y").'.log', $log, FILE_APPEND);
+      exit("db connect error: " . $con -> connect_error );
       }
     $post = file_get_contents("php://input");
     $data = explode("\n", addslashes($post));
     list($acc,$response) = credentials(array_shift($data));
+
     if($response == "OK")        exit(array_shift($data)); // session ends here
     if($response == "START")     start($acc);
     if($response == "UPDATE")    update($data,$acc);
+    exit("EXIT");
     if($response == "POSITIONS") positions($data,$acc);
     if($response == "DEAL")      deal($data,$acc);
     exit(array_shift($data));    // no command identified
   function credentials($data){
-    global $t6,$con;
+    global $t6,$con,$startdate;
     list($number,$password,$response) = explode(";", $data);
     if ($password == '') exit("account error 400");// oder neues anlegen
-    $sql = "select id from $t6 where Number='$number' and OnlinePassword='$password'";
+    $sql = "select id,started from $t6 where Number='$number' and OnlinePassword='$password'";
     if($res = $con->query($sql)){
       if ($res->num_rows == 0) exit("account error 256");// oder neues anlegen
-      list($acc) = $res->fetch_array();
+      list($acc,$startdate) = $res->fetch_array();
       return array($acc,$response);
       }
-      exit("db connect error");
+      exit("sql error: ".  $con->error);
     }
   function sql_query($sql){
     global $con;
@@ -49,12 +52,15 @@
     foreach($data as $row_str){
       $ticket=preg_replace('/;.*/','', $row_str);
       $row_str = str_replace(";", "','", $row_str);
-      $sql = "insert into $t1 ($head,brokeraccount) select '$row_str','$acc' 
+      $sql = "insert into $t1 ($head,brokeraccount) 
+              select '$row_str','$acc' from DUAL
               where not exists (select id from $t1
               where brokeraccount=$acc and ticket=$ticket) limit 1";
+
       $res = sql_query($sql);
       }
-    exit("GET,POSITIONS");  
+    //exit("GET,POSITIONS");  
+      exit("DONE");
     }
   function positions($data,$acc){// update or insert opened positions, and send closable
     global $t1,$t3,$t4;
@@ -120,11 +126,11 @@
     exit("Done: $ticket");
     }
   function start($acc){
-    global $t1;
-    $sql = "select date_format(max(open_time),'%Y.%m.%d') from $t1 where brokeraccount=$acc;";
+    global $t1,$startdate;
+    $sql = "select date_format(max(open_time),'%Y-%m-%d') from $t1 where brokeraccount=$acc;";
     $res = sql_query($sql);
     list($date) = $res->fetch_array();
-    if(empty($date)) $date ="2022.02.11";
+    if(empty($date)) $date = $startdate;
     exit("GET,UPDATE,".$date);
     }
   ?>
