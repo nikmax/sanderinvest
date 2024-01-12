@@ -20,7 +20,6 @@ if($comms->num_rows != 0){
           insert into $t3 
           (user_id,code_id,date,reason,amount,other)  
           values (${c[0]},'2','${c[1]}','${c[4]}',-${c[5]},$acc)";
-          exit($sql);
         $res = sql_query($sql);
         $amount = $c[5]/6;  // referral bonus
         $select = "select '3','${c[1]}',concat( 'from user ','${c[0]}')";

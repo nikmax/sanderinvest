@@ -9,7 +9,7 @@ if(empty($equity)){
   list($equity) = $r->fetch_array();
   } // equity
 // calculate return of investment
-  if(empty($equity)){$roi=0;$equity=0;}
+  if(empty($equity) || $empty == 0){$roi=0;$equity=0;}
   else $roi  = ($profit + $swap) / $equity; // *100 = %
   $sql  = "update $t1 set
            profit='$profit',swap='$swap',
