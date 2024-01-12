@@ -3,25 +3,23 @@
   $version = "2.02";
   $startdate;
   error_reporting(E_ALL);
-  // vars
-
-    $con = new mysqli($ds,$du,$dp,$db);
-    if ($con -> connect_error) {
-      //$log = date("F j, Y, g:i a") . ' - db connect error : ' . $con -> connect_error ."\n";
-      //file_put_contents('./log_'.date("j.n.Y").'.log', $log, FILE_APPEND);
-      exit("db connect error: " . $con -> connect_error );
-      }
-    $post = file_get_contents("php://input");
-    $data = explode("\n", addslashes($post));
-    list($acc,$response) = credentials(array_shift($data));
-
-    if($response == "OK")        exit(array_shift($data)); // session ends here
+  $con = new mysqli($ds,$du,$dp,$db);
+  if ($con -> connect_error) {
+    //$log = date("F j, Y, g:i a") . 
+    //  ' - db connect error : ' . $con -> connect_error ."\n";
+    //file_put_contents('./log_'.date("j.n.Y").'.log', $log, FILE_APPEND);
+    exit("db connect error: " . $con -> connect_error );
+    }
+  $post = file_get_contents("php://input");
+  $data = explode("\n", addslashes($post));
+  list($acc,$response) = credentials(array_shift($data));
+    if($response == "OK") 
+        exit(array_shift($data)); // session ends here
     if($response == "START")     start($acc);
     if($response == "UPDATE")    update($data,$acc);
-    exit("EXIT");
     if($response == "POSITIONS") positions($data,$acc);
     if($response == "DEAL")      deal($data,$acc);
-    exit(array_shift($data));    // no command identified
+  exit(array_shift($data));    // no command identified
   function credentials($data){
     global $t6,$con,$startdate;
     list($number,$password,$response) = explode(";", $data);
@@ -55,15 +53,15 @@
       $sql = "insert into $t1 ($head,brokeraccount) 
               select '$row_str','$acc' from DUAL
               where not exists (select id from $t1
-              where brokeraccount=$acc and ticket=$ticket) limit 1";
+              where brokeraccount=$acc and ticket='$ticket') limit 1";
 
       $res = sql_query($sql);
       }
-    //exit("GET,POSITIONS");  
-      exit("DONE");
+    exit("GET,POSITIONS");
     }
-  function positions($data,$acc){// update or insert opened positions, and send closable
-    global $t1,$t3,$t4;
+  function positions($data,$acc){
+    // update or insert opened positions, and send closable
+    global $t1,$t3,$t4,$startdate;
     $sql = "select group_concat(ticket) from $t1 where brokeraccount=$acc and close_time is null";
     $res = sql_query($sql);    
     list($row) = $res->fetch_array();
@@ -71,11 +69,11 @@
     array_shift($data);//truncate header: ticket,type,symbol,lots,open_time,open_price,profit,swap
     foreach($data as $row){
       list($ticket,$type,$symbol,$lots,$open_time,$open_price,$profit,$swap) = explode(";", $row);
-      $sql = "select id,equity from $t1 where ticket=$ticket and brokeraccount=$acc";
+      $sql = "select id,equity from $t1 where ticket='$ticket' and brokeraccount=$acc";
       $res = sql_query($sql);
       if($res->num_rows != 0){// Update
         list($id,$equity) = $res->fetch_array();
-        if(empty($equity)){
+        if(empty($equity)){// update, if not 
           $sql = "
             update $t1 set equity = (select abs(sum( if(code_id = 9, amount,0)))
             from $t3 where date <= '$open_time' and other = '$acc' ) 
@@ -116,7 +114,7 @@
     }
     $roi = 0;
     list($ticket,$close_time,$close_price,$profit,$swap) = explode(";", array_shift($data));
-    $sql = "select id,open_time,equity from $t1 where brokeraccount=$acc and ticket=$ticket";
+    $sql = "select id,open_time,equity from $t1 where brokeraccount=$acc and ticket='$ticket'";
     $res = sql_query($sql);
     if($res->num_rows != 0){
       list($id,$open_time,$equity) = $res->fetch_array();

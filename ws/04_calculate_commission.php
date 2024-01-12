@@ -4,7 +4,7 @@ $sql = "select
     @u := user_id
    ,@i := date_format(date_add( now() , interval (0) month), '%Y-%m-01 00:00:00' )
    ,@d := (select  max(date) from $t3 where code_id = 2 and user_id=@u and other=$acc)
-   ,@d := if( @d is null, '2022-02-11 00:00:00', @d )
+   ,@d := if( @d is null, '$startdate 00:00:00', @d )
    ,@a := (select sum(if(code_id = 1, amount,0))
            from  $t3 where date > @d and date < @i and user_id = @u and other=$acc)
    ,@x := if(@a is not null and @a > 0,@a/10*3,0)
@@ -12,14 +12,15 @@ $sql = "select
 
 $comms = sql_query($sql);
 
-//exit("OK: ");
 if($comms->num_rows != 0){
   while ($c = $comms->fetch_array()) {
+    
     if ($c[5] > 0) {
         $sql = "
           insert into $t3 
           (user_id,code_id,date,reason,amount,other)  
           values (${c[0]},'2','${c[1]}','${c[4]}',-${c[5]},$acc)";
+          exit($sql);
         $res = sql_query($sql);
         $amount = $c[5]/6;  // referral bonus
         $select = "select '3','${c[1]}',concat( 'from user ','${c[0]}')";
