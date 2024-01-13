@@ -1,26 +1,28 @@
 <?php
+
+if(!isset($con)) exit("falsch verbunden");
   $error = "";
 
   if(isset($_POST['remember'])) {
     $remember = 'checked = "checked"';
-    setcookie(session_name(),$_COOKIE[session_name()],time()+3600*24*31*12,'/');
-  }else $remember = '';
+    setcookie(session_name(),$_COOKIE[session_name()],time()+3600*24*31*12,'/');}
+  else $remember = '';
   if ($_POST['user'] != "" && $_POST['psw'] !=""){
-    $sql="select * from $t4
+      $sql="select * from $t4
           where (username = '".addslashes($_POST['user'])."' or 
           email = '".addslashes($_POST['user'])."')
           and password <> '' and is_active = '1'
           and password = MD5('".addslashes($_POST['psw'])."')";  
-    $res = $con -> query($sql);
-    if($res->num_rows > 0){
+      $res = $con -> query($sql);
+      if($res->num_rows > 0){
       $row = $res -> fetch_assoc();
       $_SESSION['user_id'] = $row["id"];
       $_SESSION['user'] = $row["username"];
       $_SESSION['user_name'] = htmlspecialchars($row["first_name"]);
       $con->query("update $t4 set last_login = now() where id=".$row["id"]);
-    }else $error = ' show';
-  }//else if ($_POST['user'] != "" || $_POST['psw'] !="") $error = ' show';
-  if(!$_SESSION['user_id']){
+      }else $error = ' show';}
+
+  if(!isset($_SESSION['user_id'])){
   require "structs/head.php";
 ?>
 <body>

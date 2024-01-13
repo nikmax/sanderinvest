@@ -8,28 +8,18 @@
 		"file":"home"
 	  },
 	  {
-	  	"name":"Forms",
+	  	"name":"Profile",
 	  	"type":"nav-item",
-	  	"class":"bi bi-journal-text",
-		"path":"oldfiles/forms-",
-		"items":[
-			{
-				"name":"Form Elements",
-				"file":"elements.html"
-			},
-			{
-				"name":"Form Layouts",
-				"file":"layouts.html"
-			},
-			{
-				"name":"Form Editors",
-				"file":"editors.html"
-			},
-			{
-				"name":"Form Validation",
-				"file":"validation.html"
-			}
-		]
+	  	"class":"bi bi-person",
+		"path":"?users/",
+		"file":"profile"
+	  },
+	  {
+	  	"name":"Contact",
+	  	"type":"nav-item",
+	  	"class":"bi bi-envelope",
+		"path":"?forms/",
+		"file":"contact"
 	  }
 	],
 	"deactivated":[
@@ -98,6 +88,30 @@
 		]
 	  },
 	  {
+	  	"name":"Forms",
+	  	"type":"nav-item",
+	  	"class":"bi bi-journal-text",
+		"path":"oldfiles/forms-",
+		"items":[
+			{
+				"name":"Form Elements",
+				"file":"elements.html"
+			},
+			{
+				"name":"Form Layouts",
+				"file":"layouts.html"
+			},
+			{
+				"name":"Form Editors",
+				"file":"editors.html"
+			},
+			{
+				"name":"Form Validation",
+				"file":"validation.html"
+			}
+		]
+	  },
+	  {
 	  	"name":"Tables",
 	  	"type":"nav-item",
 	  	"class":"bi bi-layout-text-window-reverse",
@@ -159,25 +173,11 @@
 	  	"class":""
 	  },
 	  {
-	  	"name":"Profile",
-	  	"type":"nav-item",
-	  	"class":"bi bi-person",
-		"path":"?users/",
-		"file":"profile"
-	  },
-	  {
 	  	"name":"F.A.Q",
 	  	"type":"nav-item",
 	  	"class":"bi bi-question-circle",
 		"path":"oldfiles/pages-",
 		"file":"faq.html"
-	  },
-	  {
-	  	"name":"Contact",
-	  	"type":"nav-item",
-	  	"class":"bi bi-envelope",
-		"path":"?forms/",
-		"file":"contact"
 	  }
 	],
 	"done":[

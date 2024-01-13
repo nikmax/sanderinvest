@@ -647,8 +647,7 @@ h6 {
 
 @media (min-width: 1200px) {
 
-  #main,
-  #footer {
+  #main{ /* ,  #footer */
     margin-left: 300px;
   }
 }
@@ -1041,26 +1040,26 @@ h6 {
   color: #012970;
 }
 
-.profile .profile-overview .row {
+.profile .row {
   margin-bottom: 20px;
   font-size: 15px;
 }
 
-.profile .profile-overview .card-title {
+.profile .card-title {
   color: #012970;
 }
 
-.profile .profile-overview .label {
+.profile label {
   font-weight: 600;
   color: rgba(1, 41, 112, 0.6);
 }
 
-.profile .profile-edit label {
+.profile label {
   font-weight: 600;
   color: rgba(1, 41, 112, 0.6);
 }
 
-.profile .profile-edit img {
+.profile img {
   max-width: 120px;
 }
 
@@ -1104,17 +1103,17 @@ h6 {
   margin-bottom: 0;
 }
 
-.contact .php-email-form .error-message {
+.contact .error-message {
   display: none;
   color: #fff;
   background: #ed3c0d;
-  text-align: left;
+  text-align: center;
   padding: 15px;
   margin-bottom: 24px;
   font-weight: 600;
 }
 
-.contact .php-email-form .sent-message {
+.contact .sent-message {
   display: none;
   color: #fff;
   background: #18d26e;
@@ -1124,7 +1123,7 @@ h6 {
   font-weight: 600;
 }
 
-.contact .php-email-form .loading {
+.contact .loading {
   display: none;
   background: #fff;
   text-align: center;
@@ -1132,7 +1131,7 @@ h6 {
   margin-bottom: 24px;
 }
 
-.contact .php-email-form .loading:before {
+.contact .loading:before {
   content: "";
   display: inline-block;
   border-radius: 50%;
@@ -1144,7 +1143,7 @@ h6 {
   -webkit-animation: animate-loading 1s linear infinite;
   animation: animate-loading 1s linear infinite;
 }
-
+/*
 .contact .php-email-form input,
 .contact .php-email-form textarea {
   border-radius: 0;
@@ -1178,7 +1177,7 @@ h6 {
 .contact .php-email-form button[type=submit]:hover {
   background: #5969f3;
 }
-
+*/
 @-webkit-keyframes animate-loading {
   0% {
     transform: rotate(0deg);

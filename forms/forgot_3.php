@@ -1,6 +1,3 @@
-<body>
-  <main>
-    <div class="container">
  <section class="section forgot min-vh-100 d-flex flex-column align-items-center justify-content-center py-4">
         <div class="container">
           <div class="row justify-content-center">
@@ -25,10 +22,7 @@
                       <label for="user" class="form-label">Username</label>
                       <div class="input-group has-validation">
                         <input type="text" name="user" class="form-control" id="user" required
-                            <?php if (isset($_POST["user"])) 
-                                     echo ' value="'.addslashes($_POST["user"]).'" ';
-                                   else echo " autofocus "; 
-                            ?> autocomplete="off">
+                             autofocus  autocomplete="off">
                         <div class="invalid-feedback">Please enter your username.</div>
                       </div>
                     </div>

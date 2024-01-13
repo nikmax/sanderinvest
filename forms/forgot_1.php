@@ -1,4 +1,4 @@
- <section class="section forgot min-vh-100 d-flex flex-column align-items-center justify-content-center py-4">
+    <section class="section forgot min-vh-100 d-flex flex-column align-items-center justify-content-center py-4">
         <div class="container">
           <div class="row justify-content-center">
             <div class="col-lg-4 col-md-6 d-flex flex-column align-items-center justify-content-center">
@@ -19,9 +19,9 @@
                   </div>
                   <form class="row g-3 needs-validation" action="?forgot" method="post" novalidate>
                     <div class="col-12">
-                      <label for="user" class="form-label">Code</label>
+                      <label for="code" class="form-label">Code</label>
                       <div class="input-group has-validation">
-                        <input type="text" name="user" class="form-control" id="user" required autofocus autocomplete="off">
+                        <input type="text" name="code" class="form-control" id="code" required autofocus autocomplete="off">
                         <div class="invalid-feedback">Wrong confirmation code</div>
                       </div>
                     </div>
@@ -37,6 +37,6 @@
           </div>
           </div><!-- End Row -->
         </div>
-     </section>
-    </div>
-  </main><!-- End #main -->
+    </section>
+</div>
+</main><!-- End #main -->
