@@ -47,7 +47,11 @@ require "structs/head.php";
                       <input type="email" name="coemail" class="form-control" id="coemail" required>
                       <div class="invalid-feedback">Please confirm your Email adddress!</div>
                     </div>
-
+                    <div class="col-12">
+                      <label for="ref" class="form-label">Referral</label>
+                      <input type="ref" name="ref" class="form-control" id="ref" required>
+                      <div class="invalid-feedback">Please enter your sponsor nickname or type "unknown"</div>
+                    </div>
                     <div class="col-12">
                       <div class="form-check">
                         <input class="form-check-input" name="terms" type="checkbox" value="" id="terms" required>
@@ -64,7 +68,7 @@ require "structs/head.php";
                     <div class="col-md-12 text-center">
                       <div class="loading">Loading</div>
                       <div class="error-message btn btn-danger"></div>
-                      <div class="sent-message btn btn-success">Your Account is created! Please check your mailbox.</div>
+                      <div class="sent-message btn btn-success">Your account is created! Please check your mailbox.</div>
                       </div>
                   </form>
                   

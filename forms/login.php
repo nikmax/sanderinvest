@@ -7,22 +7,45 @@ if(!isset($con)) exit("falsch verbunden");
     $remember = 'checked = "checked"';
     setcookie(session_name(),$_COOKIE[session_name()],time()+3600*24*31*12,'/');}
   else $remember = '';
-  if ($_POST['user'] != "" && $_POST['psw'] !=""){
+
+  if ($_POST['user'] != ""){
+      $error=' show';
+      if($_POST['psw'] !=""){
+      $msg='Username or Password incorrect!  <a href="?forgot">Forgot password?</a>';
       $sql="select * from $t4
-          where (username = '".addslashes($_POST['user'])."' or 
+          where (username = '".addslashes($_POST['user'])."' or   
           email = '".addslashes($_POST['user'])."')
-          and password <> '' and is_active = '1'
+          and password <> ''
           and password = MD5('".addslashes($_POST['psw'])."')";  
       $res = $con -> query($sql);
       if($res->num_rows > 0){
-      $row = $res -> fetch_assoc();
-      $_SESSION['user_id'] = $row["id"];
-      $_SESSION['user'] = $row["username"];
-      $_SESSION['user_name'] = htmlspecialchars($row["first_name"]);
-      $con->query("update $t4 set last_login = now() where id=".$row["id"]);
-      }else $error = ' show';}
+          $msg='Your account is not  yet active. Please check your mailbox.';
+          $row = $res -> fetch_assoc();
+          if($row['is_active']!='0'){
+              $_SESSION['user_id'] = $row["id"];
+              $_SESSION['user'] = $row["username"];
+              $_SESSION['user_name'] = htmlspecialchars($row["first_name"]);
+              $con->query("update $t4 set last_login = now() where id=".$row["id"]);
+              header("Location: /");}
 
-  if(!isset($_SESSION['user_id'])){
+            $to = $row['email'];
+            $subject = "Activate your account";
+            $headers = "From: SanderInvest <$haupt_email>\n";
+            $headers .= "Reply-To: ";
+            $message = "
+Welcome to SanderInvest!
+
+Click the following link to confirm and activate your new account:
+https://vsan:5300?activate-account/${row['password']}
+
+If the above link is not clickable, try copying and pasting it into the address bar of your web browser.
+
+Withouth activate process your credentials will delete after 24 hours.
+
+Your SanderInvest-Team";
+          
+          if (!mail($to,$subject,$message,$headers))$msg='Unknown error! Please contact our <a href="?contact&subject=create%20account%20error3&mail='.$row['email'].'">service team</a>.';
+          }}}
   require "structs/head.php";
 ?>
 <body>
@@ -54,7 +77,7 @@ if(!isset($con)) exit("falsch verbunden");
                       <div class="input-group has-validation">
                         <input type="text" name="user" class="form-control" id="user" required
                             <?php if (isset($_POST["user"])) 
-                                     echo ' value="'.addslashes($_POST["user"]).'" ';
+                                     echo ' value="'.htmlentities($_POST["user"]).'" ';
                                    else echo " autofocus "; 
                             ?> autocomplete="off">
                         <div class="invalid-feedback">Please enter your username.</div>
@@ -81,7 +104,7 @@ if(!isset($con)) exit("falsch verbunden");
                     </div>
                   </form>
                   <div id="err" class="alert alert-danger bg-danger text-light border-0 
-                        alert-dismissible fade<?=$error;?>" role="alert">Username or Password incorrect!  <a href="?forgot">Forgot password?</a>
+                        alert-dismissible fade<?=$error;?>" role="alert"><?=$msg;?>
                     <!--button type="button" class="btn-close btn-close-white" 
                         data-bs-dismiss="alert" aria-label="Close"></button-->
                   </div>
@@ -96,5 +119,4 @@ if(!isset($con)) exit("falsch verbunden");
 <?php
 require "structs/footer.php";
 exit();
-}
 ?>

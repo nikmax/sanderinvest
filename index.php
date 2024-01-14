@@ -21,7 +21,7 @@ if ($con -> connect_error) {
 if(isset($_GET['action'])) require "forms/action.php";
 if(isset($_GET['create'])) require "users/create.php";
 if(isset($_GET['logout'])) require "pages/logout.php";
-if(isset($_GET['login'])) require "forms/login.php"; 
+//if(isset($_GET['login'])) require "forms/login.php"; 
 if(isset($_GET['forgot'])) require "forms/forgot.php"; 
 if(isset($_GET['contact'])) require "forms/contact.php";
 if(!isset($_SESSION['user_id']))  require "forms/login.php";
