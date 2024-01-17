@@ -1,5 +1,5 @@
-  <!-- ======= Sidebar ======= -->
-  <aside id="sidebar" class="sidebar">
+<?php if(!isset($con)) exit("falsch verbunden"); ?>
+<aside id="sidebar" class="sidebar">
 
     <ul class="sidebar-nav" id="sidebar-nav">
     <?php
@@ -60,4 +60,4 @@
               
       ?>
     </ul>
-  </aside><!-- End Sidebar-->
+</aside>
