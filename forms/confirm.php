@@ -1,4 +1,7 @@
-<?php
+<?php if(!isset($con)) exit("falsch verbunden");
+
+  $header='Attention!';
+  $message='The confirm Link has expiries!';
 
 if($_GET['confirm']=='activate'){
 	$header = 'Wait for activate your account';

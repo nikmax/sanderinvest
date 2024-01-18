@@ -1083,27 +1083,27 @@ h6 {
   padding: 28px 30px;
 }
 
-.contact .info-box i {
+.info-box i {
   font-size: 38px;
   line-height: 0;
   color: #4154f1;
 }
 
-.contact .info-box h3 {
+.info-box h3 {
   font-size: 20px;
   color: #012970;
   font-weight: 700;
   margin: 20px 0 10px 0;
 }
 
-.contact .info-box p {
+.info-box p {
   padding: 0;
   line-height: 24px;
   font-size: 14px;
   margin-bottom: 0;
 }
 
-.contact .error-message {
+.error-message {
   display: none;
   color: #fff;
   background: #ed3c0d;
@@ -1113,7 +1113,7 @@ h6 {
   font-weight: 600;
 }
 
-.contact .sent-message {
+.sent-message {
   display: none;
   color: #fff;
   background: #18d26e;
@@ -1123,7 +1123,7 @@ h6 {
   font-weight: 600;
 }
 
-.contact .loading {
+.loading {
   display: none;
   background: #fff;
   text-align: center;
@@ -1131,7 +1131,7 @@ h6 {
   margin-bottom: 24px;
 }
 
-.contact .loading:before {
+.loading:before {
   content: "";
   display: inline-block;
   border-radius: 50%;
@@ -1176,8 +1176,9 @@ h6 {
 
 .contact .php-email-form button[type=submit]:hover {
   background: #5969f3;
-}
-*/
+}*/
+
+
 @-webkit-keyframes animate-loading {
   0% {
     transform: rotate(0deg);

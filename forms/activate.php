@@ -1,17 +1,18 @@
 <?php if(!isset($con)) exit("falsch verbunden");
-
-if (isset($_POST['psw']) && isset($_POST['psw2']) ){
-	$show=' show';
-	if ($_POST['psw'] == '' || $_POST['psw2'] == '' ) $msg= 'empty password not allowed.';
-	else if ($_POST['psw'] != $_POST['psw2'] ) $msg= 'Passwords are different.';
-	else $show='';
-}
-else if(empty($_GET['id'])) require 'error-404.php';
-
-if($_GET['activate'] == 'r'){
-		$header='Account activate';}
-if($_GET['activate'] == 'f'){
-		$header='Passwort reset';}
+if($_GET['activate']=='r'){
+    $suc='Your account is activated!';
+    $header='Account activate';
+    $sql= "SELECT id FROM $t4 
+    where is_active = 0 and datediff(now(),date_joined) < 1 
+    and password = '".addslashes($_GET['id'])."'";}
+if($_GET['activate']=='f') {
+    $suc='Your password is changed!';
+    $header='Password recovery';
+    $sql="SELECT id FROM $t4 
+    where recover = 1 and timediff(now(),last_login) < '24:00:01' 
+    and concat(password,md5(password)) = '".addslashes($_GET['id'])."'";}
+$res = $con -> query($sql);
+if($res->num_rows == 0) require 'forms/confirm.php';
 require 'head.php';
 ?>
   <main>
@@ -38,7 +39,9 @@ require 'head.php';
                     <p class="text-center small">Enter your new password</p>
                   </div>
 
-                  <form method="POST" action="?activate=<?php htmlentities($_GET['activate']);?>&id=<?php htmlentities($_GET['id']);?>" class="row g-3 needs-validation" id="form-register" novalidate>
+                  <form class="row g-3 needs-validation" id="form-activate" novalidate>
+                     <input type="hidden" name="id" value="<?= htmlentities($_GET['id']); ?>">
+                     <input type="hidden" name="act" value="<?= htmlentities($_GET['activate']); ?>">
                      <div class="col-12">
                       <label for="psw" class="form-label">Password</label>
                       <input type="password" name="psw" class="form-control" id="psw" required autofocus>
@@ -47,18 +50,16 @@ require 'head.php';
                      <div class="col-12">
                       <label for="psw2" class="form-label">Password repeat</label>
                       <input type="password" name="psw2" class="form-control" id="psw2" required>
-                      <div class="invalid-feedback">Please convirm your password!</div>
+                      <div class="invalid-feedback">Please confirm your password!</div>
                     </div>
                     <div class="col-12">
                       <button class="btn btn-primary w-100" type="submit">Submit</button>
                     </div>
-                    <div class="col-12">
-                    <div class="alert alert-danger bg-danger text-light border-0 
-                    alert-dismissible fade<?=$show;?>" role="alert"><?=$msg;?>
-						<button type="button" class="btn-close btn-close-white" 
-                        data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
-                    </div>
+                    <div class="col-md-12 text-center">
+                      <div class="loading">Loading</div>
+                      <div class="error-message btn btn-danger"></div>
+                      <div class="sent-message btn btn-success"><?=$suc;?><br> <a href="/">Log in</a> now</div>
+                      </div>
                   </form>
 
                 </div>

@@ -1,35 +1,35 @@
 (function () {
   "use strict";
-  let form = document.getElementById('php-register-form');
+  let form = document.getElementById('form-activate');
   if(!form) return;
-  form['coemail'].onpaste = function(e) {e.preventDefault();};
+  form['psw2'].onpaste = (e) => {e.preventDefault();};
 
-  form.addEventListener( 'submit', function(e) {
+  form.addEventListener( 'submit', function (e) {
       e.preventDefault();
       let thisForm = this;
-      thisForm.querySelector('.loading').classList.remove('d-block')
+      thisForm.querySelector('.loading').classList.remove('d-block');
       thisForm.querySelector('.error-message').classList.remove('d-block');
-      thisForm.querySelector('.sent-message').classList.remove('d-block')
-      let action = thisForm.getAttribute( 'action' );
-      if( !action ) {
-          displayError(thisForm, 'The form action property is not set!')
-          return;}
+      thisForm.querySelector('.sent-message').classList.remove('d-block');
+      //let action = thisForm.getAttribute( 'action' );
+      //if( !action ) {displayError(thisForm, 'The form action property is not set!');return;}
       let formData = new FormData( thisForm );
-      form_submit(thisForm, action, formData); });
+      form_submit(thisForm, '?server', formData); });
+
 
   function form_submit(thisForm, action, formData) {
-      if(!formData.has("terms")) return;
-      else formData.delete("terms");
+      //if(formData.get("id") == '') {displayError(thisForm, 'empty id!');return;}
+      //else formData.delete("terms");
       for (const value of formData.values()) if( value == "" ) return;
-      console.log(formData.get("first_name"));
-      console.log(formData.get("last_name"));
-      console.log(formData.get("email"));
-      console.log(formData.get("coemail"));
-      if( formData.get('email') != formData.get('coemail') ) {
-          displayError(thisForm,'emails are different!');
+      if( formData.get('psw') != formData.get('psw2') ) {
+          displayError(thisForm,'passwords are different!');
           return;}
-      formData.append("create","create");
+      const regex = /^(?=.*[!§$%&=?*#_])(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/g;
+      if(!formData.get('psw').match(regex)) {
+          displayError(thisForm,"password is simpel, must 8 or more symbols !§$%&=?*#_  a-z  A-Z  digits");
+          return;}
+      //formData.append("create","create");
       thisForm.querySelector('.loading').classList.add('d-block');
+
       fetch(action, {
           method: 'POST',
           body: formData,
@@ -38,10 +38,12 @@
           return response.text(); })
         .then(data => {
           thisForm.querySelector('.loading').classList.remove('d-block');
-          const res = data.split(",",2);
-          if (res[0] == 'OK') {
+          //const res = data.split(",",2);
+          //if (res[0] == 'OK') {
+          if(data == ''){
             thisForm.querySelector('.sent-message').classList.add('d-block');
-            if (res[1] == 'OK') thisForm.reset(); } 
+            form.querySelectorAll("[required]").forEach((e)=>{e.removeAttribute('required')});
+            thisForm.reset(); } 
           else {
             const msg = 'Form submission failed and no error message returned from: ';
             throw new Error(data ? data : msg + action); } })

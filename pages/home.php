@@ -14,7 +14,8 @@ $sql .= sprintf($selE,1,2,3,4,5,6,7,1,2,3,4,5,6,7);
 //echo "<pre>$sql\n</pre>"; 
 $res = $con -> query($sql) or die("ERROR0 : ".$con->error);
 $ref = array();
-while( $row = $res->fetch_array() ){ $refs = $row[0]; }
+if($res->num_rows == 0) $refs = 0;
+else while( $row = $res->fetch_array() ){ $refs = $row[0]; }
 /*
   $select0  = "select id from $t4 where ref_id";
   $select  = "select id from $t4 where ref_id";
@@ -33,15 +34,15 @@ while( $row = $res->fetch_array() ){ $refs = $row[0]; }
   $refs = $res->num_rows;
   */
 $sql = "select 
-  concat(format(sum(amount),2),' &euro;') sum
-  ,concat(format(abs(sum(if(code_id=9,amount,0))),2),' &euro;') inv
-  ,concat(format(abs(sum(if(code_id=2,amount,0))),2),' &euro;') fee
-  ,concat(format(sum(if(code_id=3,amount,0)),2),' &euro;') bonus,
-  date_format(max(date),'%d.%m.%Y %H:%i') date
+  concat(ifnull(format(sum(amount),2),0),' &euro;') sum
+  ,concat(ifnull(format(abs(sum(if(code_id=9,amount,0))),2),0),' &euro;') inv
+  ,concat(ifnull(format(abs(sum(if(code_id=2,amount,0))),2),0),' &euro;') fee
+  ,concat(ifnull(format(sum(if(code_id=3,amount,0)),2),0),' &euro;') bonus,
+  ifnull(date_format(max(date),'%d.%m.%Y %H:%i'),'-') date
   from $t3
   where user_id=".$_SESSION['user_id'];
 $res = $con -> query($sql) or die("ERROR2 : ".$con->error);
-$bal = $res->fetch_array();
+$bal = $res->fetch_assoc();
 ?>
                 
     <div class="pagetitle">
@@ -65,19 +66,6 @@ $bal = $res->fetch_array();
             <!-- Balance Card -->
             <div class="col-xxl-4 col-md-6">
               <div class="card info-card sales-card">
-                <div class="filter">
-                  <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
-                  <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-                    <li class="dropdown-header text-start">
-                      <h6>Filter</h6>
-                    </li>
-
-                    <li><a class="dropdown-item" href="#">Total</a></li>
-                    <li><a class="dropdown-item" href="#">Available</a></li>
-                    <li><a class="dropdown-item" href="#">Blocked</a></li>
-                  </ul>
-                </div>
-
                 <div class="card-body">
                   <h5 class="card-title">Balance <span>| Total</span></h5>
 
@@ -86,8 +74,8 @@ $bal = $res->fetch_array();
                       <i class="bi bi-cart"></i>
                     </div>
                     <div class="ps-3">
-                      <h6><?=$bal[0];?></h6>
-                      <span class="text-success small pt-1 fw-bold">#</span> <span class="text-muted small pt-2 ps-1"><?=$bal[4];?></span>
+                      <h6><?=$bal['sum'];?></h6>
+                      <span class="text-success small pt-1 fw-bold">#</span> <span class="text-muted small pt-2 ps-1"><?=$bal['date'];?></span>
 
                     </div>
                   </div>
@@ -100,18 +88,7 @@ $bal = $res->fetch_array();
             <div class="col-xxl-4 col-md-6">
               <div class="card info-card revenue-card">
 
-                <div class="filter">
-                  <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
-                  <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-                    <li class="dropdown-header text-start">
-                      <h6>Filter</h6>
-                    </li>
-
-                    <li><a class="dropdown-item" href="#">in work</a></li>
-                    <li><a class="dropdown-item" href="#">blocked</a></li>
-                  </ul>
-                </div>
-
+                
                 <div class="card-body">
                   <h5 class="card-title">Invest <span>| in work</span></h5>
 
@@ -120,7 +97,7 @@ $bal = $res->fetch_array();
                       <i class="bi bi-currency-dollar"></i>
                     </div>
                     <div class="ps-3">
-                      <h6><?=$bal[1];?></h6>
+                      <h6><?=$bal['inv'];?></h6>
                       <!--span class="text-success small pt-1 fw-bold">8%</span> <span class="text-muted small pt-2 ps-1">increase</span-->
 
                     </div>
@@ -135,21 +112,9 @@ $bal = $res->fetch_array();
 
               <div class="card info-card customers-card">
 
-                <div class="filter">
-                  <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
-                  <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-                    <li class="dropdown-header text-start">
-                      <h6>Filter</h6>
-                    </li>
-
-                    <li><a class="dropdown-item" href="#">Today</a></li>
-                    <li><a class="dropdown-item" href="#">This Month</a></li>
-                    <li><a class="dropdown-item" href="#">This Year</a></li>
-                  </ul>
-                </div>
-
+                
                 <div class="card-body">
-                  <h5 class="card-title">Customers <span>| This Year</span></h5>
+                  <h5 class="card-title">Referrals <span>| Total</span></h5>
 
                   <div class="d-flex align-items-center">
                     <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
@@ -157,7 +122,6 @@ $bal = $res->fetch_array();
                     </div>
                     <div class="ps-3">
                       <h6><?=$refs;?></h6>
-                      <span class="text-danger small pt-1 fw-bold">12%</span> <span class="text-muted small pt-2 ps-1">decrease</span>
 
                     </div>
                   </div>
