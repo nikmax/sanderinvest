@@ -68,8 +68,9 @@
     array_shift($data);//truncate header: ticket,type,symbol,lots,open_time,open_price,price,profit,swap
     foreach($data as $row){
       list($ticket,$type,$symbol,$lots,$open_time,$open_price,$price,$profit,$swap) = explode(";", $row);
+      
       $sql = "
-        select abs(sum( ifnull(if(code_id = 9, amount,0),0))) 
+        select ifnull(abs(sum(if(code_id = 9, amount,0))),0) 
         from $t3 
         where other =$acc and  date <= '$open_time'";
       $res = sql_query($sql);
@@ -78,13 +79,12 @@
         update $t1 h set profit = '$profit', swap = '$swap', equity = '$equity'
         where ticket='$ticket' and brokeraccount=$acc";
       $res = $con->query($sql);
-      if($con -> affected_rows == 0){// Insert
-        $sql  = "insert into $t1 set
-          ticket='$ticket',brokeraccount='$acc',
-          type='$type',symbol='$symbol',lots='$lots',
-          open_time='$open_time',open_price='$open_price'";
+      /*$len = $con -> affected_rows;
+      if($len == 0){// Insert (aber erübrigt sich !!!!!)
+        $sql  = "insert into $t1 set ticket='$ticket',brokeraccount='$acc',
+          type='$type',symbol='$symbol',lots='$lots',open_time='$open_time',open_price='$open_price'";
         $res = sql_query($sql);
-      }
+      }*/
       foreach (array_keys($tickets, $ticket) as $key) unset($tickets[$key]);
       }
     // set one closed position as close and calculate

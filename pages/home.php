@@ -43,6 +43,11 @@ $sql = "select
   where user_id=".$_SESSION['user_id'];
 $res = $con -> query($sql) or die("ERROR2 : ".$con->error);
 $bal = $res->fetch_assoc();
+$sql = "select concat('<tr><th scope=\"row\">',brokeraccount,'</th><td>',concat_ws('</td><td>',ticket,type,symbol,lots,open_time,ifnull(close_time,'in work'),profit),'</td></tr>') as line from acc_history";
+$res = $con -> query($sql) or die("ERROR5 : ".$con->error);
+
+
+
 ?>
                 
     <div class="pagetitle">
@@ -138,4 +143,39 @@ $bal = $res->fetch_assoc();
 
 
       </div>
+
+
+      <div class="row">
+        <div class="col-lg-12">
+
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Default Table</h5>
+
+              <!-- Default Table -->
+              <table class="table datatable">
+                <thead>
+                  <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Ticket</th>
+                    <th scope="col">Type</th>
+                    <th scope="col">Symbol</th>
+                    <th scope="col">Volume</th>
+                    <th scope="col">Open Time</th>
+                    <th scope="col">Closed Time</th>
+                    <th scope="col">Profit</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <?php while($row = $res->fetch_array()) echo $row[0]; ?>
+                </tbody>
+              </table>
+              <!-- End Default Table Example -->
+            </div>
+          </div>
+        </div>
+      </div>
+
+
     </section>
+
