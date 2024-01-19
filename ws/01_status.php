@@ -3,7 +3,7 @@
   $version = "2.02";
   $startdate;
   error_reporting(E_ALL);
-  $con = new mysqli($ds,$du,$dp,$db);
+  //$con = new mysqli($ds,$du,$dp,$db);
   if ($con -> connect_error) {
     //$log = date("F j, Y, g:i a") . 
     //  ' - db connect error : ' . $con -> connect_error ."\n";
@@ -13,8 +13,7 @@
   $post = file_get_contents("php://input");
   $data = explode("\n", addslashes($post));
   list($acc,$response) = credentials(array_shift($data));
-    if($response == "OK") 
-        exit(array_shift($data)); // session ends here
+    if($response == "OK") exit(array_shift($data)); // session ends here
     if($response == "START")     start($acc);
     if($response == "UPDATE")    update($data,$acc);
     if($response == "POSITIONS") positions($data,$acc);
@@ -45,7 +44,7 @@
     }
   function update($data,$acc){
     global $t1;
-    $head = array_shift($data);//"ticket,type,symbol,open_time,lots";
+    $head = array_shift($data);//"ticket,type,symbol,open_time,open_price,lots";
     $len = count($data);
     foreach($data as $row_str){
       $ticket=preg_replace('/;.*/','', $row_str);
@@ -54,51 +53,50 @@
               select '$row_str','$acc' from DUAL
               where not exists (select id from $t1
               where brokeraccount=$acc and ticket='$ticket') limit 1";
-
+      //file_put_contents('update-insert.log', $sql, FILE_APPEND);
       $res = sql_query($sql);
       }
     exit("GET,POSITIONS");
     }
   function positions($data,$acc){
     // update or insert opened positions, and send closable
-    global $t1,$t3,$t4,$startdate;
+    global $t1,$t3,$t4,$startdate,$con;
     $sql = "select group_concat(ticket) from $t1 where brokeraccount=$acc and close_time is null";
     $res = sql_query($sql);    
     list($row) = $res->fetch_array();
     $tickets = explode(',',$row); // get all opened orders from sql
-    array_shift($data);//truncate header: ticket,type,symbol,lots,open_time,open_price,profit,swap
+    array_shift($data);//truncate header: ticket,type,symbol,lots,open_time,open_price,price,profit,swap
     foreach($data as $row){
-      list($ticket,$type,$symbol,$lots,$open_time,$open_price,$profit,$swap) = explode(";", $row);
-      $sql = "select id,equity from $t1 where ticket='$ticket' and brokeraccount=$acc";
+      list($ticket,$type,$symbol,$lots,$open_time,$open_price,$price,$profit,$swap) = explode(";", $row);
+      $sql = "
+        select abs(sum( ifnull(if(code_id = 9, amount,0),0))) 
+        from $t3 
+        where other =$acc and  date <= '$open_time'";
       $res = sql_query($sql);
-      if($res->num_rows != 0){// Update
-        list($id,$equity) = $res->fetch_array();
-        if(empty($equity)){// update, if not 
-          $sql = "
-            update $t1 set equity = (select abs(sum( if(code_id = 9, amount,0)))
-            from $t3 where date <= '$open_time' and other = '$acc' ) 
-            where id=$id";
-          $res = sql_query($sql);
-          }
-      }else{ // insert
+      list($equity) = $res->fetch_array();
+      $sql = "
+        update $t1 h set profit = '$profit', swap = '$swap', equity = '$equity'
+        where ticket='$ticket' and brokeraccount=$acc";
+      $res = $con->query($sql);
+      if($con -> affected_rows == 0){// Insert
         $sql  = "insert into $t1 set
           ticket='$ticket',brokeraccount='$acc',
           type='$type',symbol='$symbol',lots='$lots',
-          open_time='$open_time',open_price='$open_price',
-          profit='$profit',swap='$swap'";
+          open_time='$open_time',open_price='$open_price'";
         $res = sql_query($sql);
-        }
+      }
       foreach (array_keys($tickets, $ticket) as $key) unset($tickets[$key]);
       }
     // set one closed position as close and calculate
     // send command for get closed deal
     if(count($tickets) != 0) exit("GET,DEAL,".array_shift($tickets));
+
     // calculate bonis!!!! here
     require "./04_calculate_commission.php";
     $sql = "select abs(sum( if(code_id = 9, amount,0))) sum from $t3 where other=$acc";
     $res = sql_query($sql);
     list($equity) = $res->fetch_array();
-    exit("GET,EQUITY,".number_format($equity,2));
+    exit("GET,EQUITY,$equity");//.number_format($equity,2));
     }
   function deal($data,$acc){
     global $t1,$t3;
@@ -110,7 +108,7 @@
       $sql = "select abs(sum( if(code_id = 9, amount,0))) sum from $t3 where other=$acc";
       $res = sql_query($sql);
       list($equity) = $res->fetch_array();
-      exit("GET,EQUITY,".number_format($equity,2));
+      exit("GET,EQUITY,$equity");//.number_format($equity,2));
     }
     $roi = 0;
     list($ticket,$close_time,$close_price,$profit,$swap) = explode(";", array_shift($data));
@@ -124,6 +122,9 @@
     exit("Done: $ticket");
     }
   function start($acc){
+    /* session starts here, get date from last saved opened position
+        end return it 
+    */
     global $t1,$startdate;
     $sql = "select date_format(max(open_time),'%Y-%m-%d') from $t1 where brokeraccount=$acc;";
     $res = sql_query($sql);
