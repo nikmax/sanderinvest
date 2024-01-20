@@ -11,7 +11,18 @@ $sql .= sprintf($selX,5,5,4);
 $sql .= sprintf($selX,6,6,5);
 $sql .= sprintf($selX,7,7,6);
 $sql .= sprintf($selE,1,2,3,4,5,6,7,1,2,3,4,5,6,7);
-//echo "<pre>$sql\n</pre>"; 
+//echo "<pre>$sql\n</pre>";
+/*  :)))
+-- maximal 6 levels
+set @u=1; select @c1:=count(id), @p1:=group_concat(id) from auth_user where ref_id = @u and id <> @u 
+union     select @c2:=count(id), @p2:= group_concat(id) from auth_user where find_in_set(ref_id ,@p1) > 0 
+union     select @c3:=count(id), @p3:= group_concat(id) from auth_user where find_in_set(ref_id ,@p2) > 0 
+union     select @c4:=count(id), @p4:= group_concat(id) from auth_user where find_in_set(ref_id ,@p3) > 0 
+union     select @c5:=count(id), @p5:= group_concat(id) from auth_user where find_in_set(ref_id ,@p4) > 0 
+union     select @c6:=count(id), @p6:= group_concat(id) from auth_user where find_in_set(ref_id ,@p5) > 0 
+union     select @c7:=count(id), @p7:= group_concat(id) from auth_user where find_in_set(ref_id ,@p6) > 0 
+union all select @c1+@c2+@c3+@c4+@c5+@c6+@c7, concat_ws(',',@p1,@p2,@p3,@p4,@p5,@p6,@p7)
+*/
 $res = $con -> query($sql) or die("ERROR0 : ".$con->error);
 $ref = array();
 if($res->num_rows == 0) $refs = 0;
@@ -52,11 +63,11 @@ function getTradesHistory($r){
     $res = $con -> query($sql) or die("ERROR3 : ".$con->error);
     list($equity) = $res->fetch_array();
     if($equity == 0) return '';
-    return '<td>'.number_format(($r[2]+$r[3])/$r[4]*$equity,2).'&euro; / '.number_format($equity,2).'&euro;</td></tr>';
+    return '<td>'.number_format(($r[2]+$r[3])/$r[4]*$equity,2).'&euro;&nbsp;/&nbsp;'.number_format($equity,2).'&euro;</td></tr>';
 }
 $sql = "select 
           h.brokeraccount, h.open_time, h.profit,
-          h.swap, h.equity, concat('<tr><th scope=\"row\">',b.Kurzname,'</th><td>',concat_ws('</td><td>',h.ticket,if(h.type=0,'BUY','SELL'),h.symbol,h.lots,date_format(h.open_time,'%Y-%m-%d %H:%i'),ifnull(date_format(h.close_time,'%Y-%m-%d %H:%i'),'in work')),'</td>') as line from $t1 h
+          h.swap, h.equity, concat('<tr><th scope=\"row\">',b.Kurzname,'</th><td>',concat_ws('</td><td>',h.ticket,if(h.type=0,'BUY','SELL'),REPLACE(h.symbol,'micro',''),h.lots,date_format(h.open_time,'%Y&#8209;%m&#8209;%d&nbsp;%H:%i'),ifnull(date_format(h.close_time,'%Y&#8209;%m&#8209;%d&nbsp;%H:%i'),'in work')),'</td>') as line from $t1 h
           left join adm_brokeraccount a on h.brokeraccount = a.id
           LEFT JOIN adm_broker b ON a.Broker_id = b.id";
 $tr = $con -> query($sql) or die("ERROR4 : ".$con->error);
@@ -65,7 +76,7 @@ $bl = $con -> query("set @c=0");
 $sql = "select 
     concat('<tr><th scope=\"row\">'
            ,@c:= @c+1,'</th><td>',concat_ws('</td><td>'
-           ,date_format(u.date,'%Y-%m-%d %H:%i'), e.Text,format(u.amount,2)
+           ,date_format(u.date,'%Y&#8209;%m&#8209;%d&nbsp;%H:%i'), e.Text,format(u.amount,2)
            ,format(@a:=@a+u.amount,2), b.Kurzname, u.reason, u.text)
            ,'</td></tr>') as s
     from $t3 u 
@@ -173,9 +184,9 @@ $bl = $con -> query($sql) or die("ERROR5 : ".$con->error);
       <div class="row">
         <div class="col-lg-12">
           <div class="card">
-            <div class="card-body">
+            <div class="card-body table-responsive">
               <h5 class="card-title">Trading history</h5>
-              <table class="table datatable table-striped table-hover table-sm" id="trades">
+              <table class="table datatable table-striped table-hover" id="trades">
                 <thead>
                   <tr>
                     <th scope="col">#</th>
@@ -203,9 +214,9 @@ $bl = $con -> query($sql) or die("ERROR5 : ".$con->error);
       <div class="row">
         <div class="col-lg-12">
           <div class="card">
-            <div class="card-body">
+            <div class="card-body table-responsive">
               <h5 class="card-title">Account balance</h5>
-              <table class="table datatable table-striped table-hover table-sm" id="balance">
+              <table class="table datatable table-striped table-hover" id="balance">
                 <thead>
                   <tr>
                     <th scope="col">#</th>

@@ -298,14 +298,20 @@
   /**
    * Initiate Datatables
    */
-  const datatables = select('.datatable', true)
+
+  const datatables = select('.datatable', true);
   datatables.forEach(datatable => {
-    var a = new simpleDatatables.DataTable(datatable);
-    a.on('datatable.selectrow', (i,e) => {
+    //var a = new simpleDatatables.DataTable(datatable);
+    //a.on('datatable.selectrow', (i,e) => {
+
       //datatable.id
       //a.data.data[i].cells[...].text
       //a.data.headings[...].data
-      console.log(a.data);});
+      //    console.log(a.data);});
+
+
+
+
   })
 
 

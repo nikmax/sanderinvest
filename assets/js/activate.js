@@ -45,7 +45,8 @@
           //if (res[0] == 'OK') {
           if(data == ''){
             thisForm.querySelector('.sent-message').classList.add('d-block');
-            form.querySelectorAll("[required]").forEach((e)=>{e.removeAttribute('required')});
+            //form.querySelectorAll("[required]").forEach((e)=>{e.removeAttribute('required')});
+            form.addAttribute('novalidate');
             thisForm.reset(); } 
           else {
             const msg = 'Form submission failed and no error message returned from: ';
