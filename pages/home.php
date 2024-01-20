@@ -43,10 +43,37 @@ $sql = "select
   where user_id=".$_SESSION['user_id'];
 $res = $con -> query($sql) or die("ERROR2 : ".$con->error);
 $bal = $res->fetch_assoc();
-$sql = "select concat('<tr><th scope=\"row\">',brokeraccount,'</th><td>',concat_ws('</td><td>',ticket,type,symbol,lots,open_time,ifnull(close_time,'in work'),profit),'</td></tr>') as line from acc_history";
-$res = $con -> query($sql) or die("ERROR5 : ".$con->error);
 
-
+/* get Trade History */
+function getTradesHistory($r){
+    global $t3,$con;
+    $sql = "select ifnull(abs(sum( if(code_id = 9, amount,0))),0) from $t3 
+        where other = '${r[0]}' and  date <= '${r[1]}' and user_id=".$_SESSION['user_id'];
+    $res = $con -> query($sql) or die("ERROR3 : ".$con->error);
+    list($equity) = $res->fetch_array();
+    if($equity == 0) return '';
+    return '<td>'.number_format(($r[2]+$r[3])/$r[4]*$equity,2).'&euro; / '.number_format($equity,2).'&euro;</td></tr>';
+}
+$sql = "select 
+          h.brokeraccount, h.open_time, h.profit,
+          h.swap, h.equity, concat('<tr><th scope=\"row\">',b.Kurzname,'</th><td>',concat_ws('</td><td>',h.ticket,if(h.type=0,'BUY','SELL'),h.symbol,h.lots,date_format(h.open_time,'%Y-%m-%d %H:%i'),ifnull(date_format(h.close_time,'%Y-%m-%d %H:%i'),'in work')),'</td>') as line from $t1 h
+          left join adm_brokeraccount a on h.brokeraccount = a.id
+          LEFT JOIN adm_broker b ON a.Broker_id = b.id";
+$tr = $con -> query($sql) or die("ERROR4 : ".$con->error);
+$bl = $con -> query("set @a=0");
+$bl = $con -> query("set @c=0");
+$sql = "select 
+    concat('<tr><th scope=\"row\">'
+           ,@c:= @c+1,'</th><td>',concat_ws('</td><td>'
+           ,date_format(u.date,'%Y-%m-%d %H:%i'), e.Text,format(u.amount,2)
+           ,format(@a:=@a+u.amount,2), b.Kurzname, u.reason, u.text)
+           ,'</td></tr>') as s
+    from $t3 u 
+    left join $t5 e on u.code_id = e.id
+    left join $t6 a on u.other = a.id
+    left join $t7 b on a.Broker_id = b.id
+    where u.user_id = ".$_SESSION['user_id']." order by u.date asc, u.id asc";
+$bl = $con -> query($sql) or die("ERROR5 : ".$con->error);
 
 ?>
                 
@@ -62,8 +89,8 @@ $res = $con -> query($sql) or die("ERROR5 : ".$con->error);
     </div><!-- End Page Title -->
 
     <section class="section dashboard">
-      <div class="row">
 
+      <div class="row">
         <!-- Left side columns -->
         <div class="col-lg-12">
           <div class="row">
@@ -140,20 +167,15 @@ $res = $con -> query($sql) or die("ERROR5 : ".$con->error);
 
           </div>
         </div><!-- End Left side columns -->
-
-
       </div>
 
 
       <div class="row">
         <div class="col-lg-12">
-
           <div class="card">
             <div class="card-body">
-              <h5 class="card-title">Default Table</h5>
-
-              <!-- Default Table -->
-              <table class="table datatable">
+              <h5 class="card-title">Trading history</h5>
+              <table class="table datatable table-striped table-hover table-sm" id="trades">
                 <thead>
                   <tr>
                     <th scope="col">#</th>
@@ -163,14 +185,43 @@ $res = $con -> query($sql) or die("ERROR5 : ".$con->error);
                     <th scope="col">Volume</th>
                     <th scope="col">Open Time</th>
                     <th scope="col">Closed Time</th>
-                    <th scope="col">Profit</th>
+                    <th scope="col">Profit/Invest</th>
                   </tr>
                 </thead>
                 <tbody>
-                  <?php while($row = $res->fetch_array()) echo $row[0]; ?>
+                  <?php
+                      while($row = $tr->fetch_array()){
+                        $e=getTradesHistory($row);
+                        if($e != '') echo $row[5].$e;} ?>
                 </tbody>
               </table>
-              <!-- End Default Table Example -->
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Account balance</h5>
+              <table class="table datatable table-striped table-hover table-sm" id="balance">
+                <thead>
+                  <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Date</th>
+                    <th scope="col">Type</th>
+                    <th scope="col">Amount</th>
+                    <th scope="col">Balance</th>
+                    <th scope="col">Source</th>
+                    <th scope="col">Comment 1</th>
+                    <th scope="col">Comment 2</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <?php while($row=$bl->fetch_array()) echo $row[0]; ?>
+                </tbody>
+              </table>
             </div>
           </div>
         </div>
@@ -178,4 +229,3 @@ $res = $con -> query($sql) or die("ERROR5 : ".$con->error);
 
 
     </section>
-

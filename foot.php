@@ -12,8 +12,6 @@
 <script src="assets/vendor/tinymce/tinymce.min.js"></script>
 <script src="assets/vendor/simple-datatables/simple-datatables.js"></script>
 
-<script src="assets/js/activate.js"></script>
-
   <!-- Vendor JS Files -->
   <!--script src="assets/vendor/apexcharts/apexcharts.min.js"></script>
   <script src="assets/vendor/chart.js/chart.umd.js"></script>
@@ -23,6 +21,7 @@
 
 <!-- Template Main JS File -->
 <script src="assets/js/main.js"></script>
+<script src="assets/js/activate.js"></script>
 
 </body>
 </html>

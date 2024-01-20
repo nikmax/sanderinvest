@@ -6,7 +6,7 @@ $sql = "
             where ticket='$ticket' and brokeraccount=$acc and equity is null";
 //if(empty($equity)){ 
   $sql = "
-        select abs(sum( ifnull(if(code_id = 9, amount,0),0))) 
+        select ifnull(abs(sum( if(code_id = 9, amount,0))),0) 
         from $t3 
         where other =$acc and  date <= '$open_time'";
   $r = sql_query($sql);

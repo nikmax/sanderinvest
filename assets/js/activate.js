@@ -1,5 +1,8 @@
+
 (function () {
   "use strict";
+
+
   let form = document.getElementById('form-activate');
   if(!form) return;
   form['psw2'].onpaste = (e) => {e.preventDefault();};
