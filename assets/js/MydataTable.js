@@ -5,18 +5,28 @@
    * https://fiduswriter.github.io/simple-datatables/demos/
    */
 
-import {
-        DataTable,
-        makeEditable
-    } from "/assets/js/dataTableModule.js"
-    const datatables = document.querySelectorAll('.datatable');
+  import {
+      DataTable
+      //, makeEditable
+      } from "/assets/js/dataTableModule.js"
+  const datatables = document.querySelectorAll('.datatable');
+  window.dt=[];
     datatables.forEach(datatable => {
-        var a = new DataTable(datatable);
+        
+        var i = new DataTable(datatable);
+        i.dom.addEventListener("click", e => {console.log(e); })
+        window.dt.push({
+          "name": datatable.id,
+          "data": i
+        });
         //a.on('datatable.update', (i,e) => {
         //datatable.id
         //a.data.data[i].cells[...].text
         //a.data.headings[...].data
         //console.log(i,e,a.data);});
+        /*
+
+        */
         /* editor
         let inline = false;
         var editor = new makeEditable(a,{

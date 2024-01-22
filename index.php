@@ -3,6 +3,8 @@ session_start();
 require 'assets/sql/config.php';
 
 /* actions */
+
+if(isset($_GET['service'])) require 'service.php';
 if(isset($_GET['server'])) require 'forms/server.php';
 if(isset($_GET['logout'])) require 'forms/logout.php';
 if(isset($_GET['activate'])) require 'forms/activate.php';

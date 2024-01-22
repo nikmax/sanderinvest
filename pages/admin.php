@@ -1,7 +1,6 @@
 <?php
 if(!isset($_SESSION['user_id'])) exit("falsch verbunden"); 
 
-
 $sql = "select is_superuser from $t4 where is_superuser = 1 and id=".$_SESSION['user_id'];
 $res = $con -> query($sql) or die("ERROR1 : ".$con->error);
 if($res->num_rows != 1) header('Location: /');
@@ -17,6 +16,10 @@ $sql = "select
   from $t3  ";//group by other;"
 $res = $con -> query($sql) or die("ERROR3 : ".$con->error);
 $bal = $res->fetch_assoc();
+/**
+ * get table of balance
+ */
+
 $bl = $con -> query("set @a=0");
 $bl = $con -> query("set @c=0");
 $sql = "select 
@@ -60,157 +63,148 @@ while($row = $tr->fetch_array()){
 }
 
 ?>
-                
-    <div class="pagetitle">
-      <h1>Dashboard</h1>
-      <nav>
-        <ol class="breadcrumb">
-          <li class="breadcrumb-item"><a href="?">Home</a></li>
-          <li class="breadcrumb-item active">Admin</li>
-        </ol>
-      </nav>
-    </div><!-- End Page Title -->
+          
+<div class="pagetitle">
+  <h1>Dashboard</h1>
+  <nav>
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="?">Home</a></li>
+      <li class="breadcrumb-item active">Admin</li>
+    </ol>
+  </nav>
+</div><!-- End Page Title -->
 
-    <section class="section dashboard">
+<section class="section dashboard">
 
-      <div class="row">
-        <!-- Left side columns -->
-        <div class="col-lg-12">
-          <div class="row">
+<div class="row">
+  <!-- Left side columns -->
+  <div class="col-lg-12">
+    <div class="row">
 
-            <!-- Balance Card -->
-            <div class="col-xxl-4 col-md-6">
-              <div class="card info-card sales-card">
-                <div class="card-body">
-                  <h5 class="card-title"><a href="?admin">Balance</a> <span>| Total</span></h5>
+      <!-- Balance Card -->
+      <div class="col-xxl-4 col-md-6">
+        <div class="card info-card sales-card">
+          <div class="card-body">
+            <h5 class="card-title"><a href="?admin">Balance</a> <span>| Total</span></h5>
 
-                  <div class="d-flex align-items-center">
-                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                      <i class="bi bi-cart"></i>
-                    </div>
-                    <div class="ps-3">
-                      <h6><?=$bal['sum'];?></h6>
-                      <span class="text-success small pt-1 fw-bold">#</span> <span class="text-muted small pt-2 ps-1"><?=$bal['date'];?></span>
-
-                    </div>
-                  </div>
-                </div>
+            <div class="d-flex align-items-center">
+              <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                <i class="bi bi-cart"></i>
+              </div>
+              <div class="ps-3">
+                <h6><?=$bal['sum'];?></h6>
+                <span class="text-success small pt-1 fw-bold">#</span> <span class="text-muted small pt-2 ps-1"><?=$bal['date'];?></span>
 
               </div>
-            </div><!-- End Balance Card -->
-
-            <!-- Investment Card -->
-            <div class="col-xxl-4 col-md-6">
-              <div class="card info-card revenue-card">
-
-                
-                <div class="card-body">
-                  <h5 class="card-title"><a href="?admin&trades">Invest</a> <span>| in work</span></h5>
-
-                  <div class="d-flex align-items-center">
-                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                      <i class="bi bi-currency-dollar"></i>
-                    </div>
-                    <div class="ps-3">
-                      <h6><?=$bal['inv'];?></h6>
-                      <!--span class="text-success small pt-1 fw-bold">8%</span> <span class="text-muted small pt-2 ps-1">increase</span-->
-
-                    </div>
-                  </div>
-                </div>
-
-              </div>
-            </div><!-- End Investment Card -->
-
-            <!-- Referrals Card -->
-            <div class="col-xxl-4 col-xl-12">
-
-              <div class="card info-card customers-card">
-
-                
-                <div class="card-body">
-                  <h5 class="card-title">Users <span>| Total</span></h5>
-
-                  <div class="d-flex align-items-center">
-                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                      <i class="bi bi-people"></i>
-                    </div>
-                    <div class="ps-3">
-                      <h6><?=$usr[0];?></h6>
-
-                    </div>
-                  </div>
-
-                </div>
-              </div>
-
-            </div><!-- End Referrals Card -->
-
-
-
-          </div>
-        </div><!-- End Left side columns -->
-      </div>
-
-<?php
-if(isset($_GET['trades'])){ 
-?>
-
-      <div class="row">
-        <div class="col-lg-12">
-          <div class="card">
-            <div class="card-body table-responsive">
-              <h5 class="card-title">Trading history</h5>
-              <table class="table datatable table-striped table-hover" id="trades">
-                <thead>
-                  <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Ticket</th>
-                    <th scope="col">Type</th>
-                    <th scope="col">Symbol</th>
-                    <th scope="col">Volume</th>
-                    <th scope="col">Open Time</th>
-                    <th scope="col">Closed Time</th>
-                    <th scope="col">Profit/Invest</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <?php getTradesHistory(); ?>
-                </tbody>
-              </table>
             </div>
           </div>
+
         </div>
+      </div><!-- End Balance Card -->
+
+      <!-- Investment Card -->
+      <div class="col-xxl-4 col-md-6">
+        <div class="card info-card revenue-card">
+
+          
+          <div class="card-body">
+            <h5 class="card-title"><a href="?admin&trades">Invest</a> <span>| in work</span></h5>
+
+            <div class="d-flex align-items-center">
+              <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                <i class="bi bi-currency-dollar"></i>
+              </div>
+              <div class="ps-3">
+                <h6><?=$bal['inv'];?></h6>
+                <!--span class="text-success small pt-1 fw-bold">8%</span> <span class="text-muted small pt-2 ps-1">increase</span-->
+
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div><!-- End Investment Card -->
+
+      <!-- Referrals Card -->
+      <div class="col-xxl-4 col-xl-12">
+
+        <div class="card info-card customers-card">
+
+          
+          <div class="card-body">
+            <h5 class="card-title">Users <span>| Total</span></h5>
+
+            <div class="d-flex align-items-center">
+              <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                <i class="bi bi-people"></i>
+              </div>
+              <div class="ps-3">
+                <h6><?=$usr[0];?></h6>
+
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div><!-- End Referrals Card -->
+
+    </div>
+  </div><!-- End Left side columns -->
+</div>
+
+<?php if(isset($_GET['trades'])){ ?>
+<div class="row">
+  <div class="col-lg-12">
+    <div class="card">
+      <div class="card-body table-responsive">
+        <h5 class="card-title">Trading history</h5>
+        <table class="table datatable table-striped table-hover" id="trades">
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Ticket</th>
+              <th scope="col">Type</th>
+              <th scope="col">Symbol</th>
+              <th scope="col">Volume</th>
+              <th scope="col">Open Time</th>
+              <th scope="col">Closed Time</th>
+              <th scope="col">Profit/Invest</th>
+            </tr>
+          </thead>
+          <tbody><?php getTradesHistory(); ?></tbody>
+        </table>
       </div>
+    </div>
+  </div>
+</div>
+
 <?php } else { ;?>
 
-      <div class="row">
-        <div class="col-lg-12">
-          <div class="card">
-            <div class="card-body table-responsive">
-              <h5 class="card-title">Account balance</h5>
-              <table class="table datatable table-striped table-hover" id="balance">
-                <thead>
-                  <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Date</th>
-                    <th scope="col">User</th>
-                    <th scope="col">Type</th>
-                    <th scope="col">Amount</th>
-                    <th scope="col">Balance</th>
-                    <th scope="col">Source</th>
-                    <th scope="col">Comment 1</th>
-                    <th scope="col">Comment 2</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <?php while($row=$bl->fetch_array()) echo $row[0]; ?>
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
+<div class="row">
+  <div class="col-lg-12">
+    <div class="card">
+      <div class="card-body table-responsive">
+        <h5 class="card-title">Account balance</h5>
+        <table class="table datatable table-striped table-hover" id="balance">
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Date</th>
+              <th scope="col">User</th>
+              <th scope="col">Type</th>
+              <th scope="col">Amount</th>
+              <th scope="col">Balance</th>
+              <th scope="col">Source</th>
+              <th scope="col">Comment 1</th>
+              <th scope="col">Comment 2</th>
+            </tr>
+          </thead>
+          <tbody><?php while($row=$bl->fetch_array()) echo $row[0]; ?></tbody>
+        </table>
       </div>
+    </div>
+  </div>
+</div>
 <?php } ;?>
 
-    </section>
+</section>
