@@ -11,9 +11,11 @@ if(isset($_GET['login'])) require 'forms/login.php';
 if(isset($_GET['forgot'])) require 'forms/forgot.php';
 if(isset($_GET['register'])) require 'forms/register.php';
 
+
 /* start here */
 if(!isset($_SESSION['user_id'])) require 'forms/login.php';
 $page = 'pages';$file = 'home';
+if(isset($_GET['admin'])) $file='admin';
 
 /*/ Sonderbehandlung //
 	if(isset($_GET['action'])) require "forms/action.php";
