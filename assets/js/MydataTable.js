@@ -9,16 +9,23 @@
       DataTable
       //, makeEditable
       } from "/assets/js/dataTableModule.js"
+
   const datatables = document.querySelectorAll('.datatable');
   window.dt=[];
     datatables.forEach(datatable => {
-        
-        var i = new DataTable(datatable);
-        i.dom.addEventListener("click", e => {console.log(e); })
-        window.dt.push({
-          "name": datatable.id,
-          "data": i
-        });
+        fetch("?service&"+datatable.id)
+                .then(response => response.json())
+                .then(data => {
+
+                    var i = new DataTable(datatable,{data: data});
+                    i.dom.addEventListener("click", e => {console.log(e); })
+                     window.dt.push({
+                      "name": datatable.id,
+                      "data": i
+                    });
+                })
+       
+       
         //a.on('datatable.update', (i,e) => {
         //datatable.id
         //a.data.data[i].cells[...].text
